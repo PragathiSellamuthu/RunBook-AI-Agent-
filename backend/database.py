@@ -99,6 +99,13 @@ def log_step(execution_id, step_data):
     conn.commit()
     conn.close()
 
+def increment_discord_sent(execution_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('UPDATE executions SET discord_sent = discord_sent + 1 WHERE id = ?', (execution_id,))
+    conn.commit()
+    conn.close()
+
 def get_history(limit=20):
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row

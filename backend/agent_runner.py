@@ -59,6 +59,8 @@ class OpsAgentRunner:
             payload = {"content": message}
             res = requests.post(DISCORD_WEBHOOK, json=payload, timeout=5)
             print(f"[DISCORD DEBUG] Webhook response status: {res.status_code}")
+            if res.status_code in [200, 204] and self.current_execution_id:
+                db.increment_discord_sent(self.current_execution_id)
         except Exception as e:
             try:
                 print(f"[DISCORD DEBUG] Discord error: {type(e).__name__}")
