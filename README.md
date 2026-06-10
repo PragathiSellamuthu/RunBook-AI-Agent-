@@ -59,43 +59,31 @@ Click on any file to view its implementation details:
 
 ---
 
-## 🚀 Setup & Launch
 
-### Option 1 — Access Live Application
+## 🚀 Access the Application
 
+### Live Application
 👉 **[https://runbook.onrender.com](https://runbook.onrender.com)**
 
-No installation needed. Opens directly in browser.
+Opens directly in browser. No installation needed.
 
 ---
 
-### Option 2 — Run Locally (Windows)
+### 💬 Discord Community
+👉 **[https://discord.com/invite/dQEXVDS5](https://discord.com/invite/dQEXVDS5)**
 
-Follow these steps to run on your own machine:
+Join our Discord server to receive live incident 
+alerts and real-time notifications from OpsBot AI.
 
-#### 1. Install Dependencies
-Ensure Python 3.11+ is installed. Run in PowerShell:
-```powershell
-pip install -r requirements.txt
-```
+---
 
-#### 2. Configure Local AI (Ollama)
-1. Download and install [Ollama](https://ollama.com)
-2. Start the Ollama service
-3. Pull the model:
-```powershell
-ollama pull llama3
-```
+### ⚙️ Environment Setup (Cloud)
 
-#### 3. Setup Discord Notifications (Optional)
-To receive instant alerts:
-1. Open `backend/agent_runner.py`
-2. Set your Discord webhook URL:
-```python
-DISCORD_WEBHOOK = "https://discord.com/invite/dQEXVDS5"
-```
-If left empty, app runs without notifications.
+To configure your own deployment:
 
+#### 1. Set Discord Webhook (Optional)
+Set your Discord webhook URL as an 
+environment variable in Render dashboard:
 
 
 ```
