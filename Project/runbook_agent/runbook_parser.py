@@ -28,21 +28,13 @@ class RunbookParser:
                 steps.append({
                     "step_number": step_num,
                     "step_type": type_match.group(1) if type_match else "SAFE",
-                    "description": desc_match.group(1) if desc_match else "",
-                    "command": cmd_match.group(1) if cmd_match else "",
-                    "expected_output": expected_match.group(1) if expected_match else "",
-                    "risk": risk_match.group(1) if risk_match else None
+                    "description": desc_match.group(1).strip() if desc_match else "",
+                    "command": cmd_match.group(1).strip() if cmd_match else "",
+                    "expected_output": expected_match.group(1).strip() if expected_match else "",
+                    "risk": risk_match.group(1).strip() if risk_match else None
                 })
             
             return steps
         except Exception as e:
             print(f"Error parsing runbook {file_path}: {e}")
             return []
-
-if __name__ == "__main__":
-    # Test parser
-    parser = RunbookParser()
-    # Assuming the file exists for testing
-    # res = parser.parse("../runbooks/nginx_down.md")
-    # print(res)
-    pass

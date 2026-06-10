@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Databases
+*.db
+*.sqlite3
+
+# Exports / CSV
+project/exports/*.csv
+exports/*.csv
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp

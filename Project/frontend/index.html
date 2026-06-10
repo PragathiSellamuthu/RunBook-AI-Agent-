@@ -726,7 +726,7 @@
                 </div>
                 <div class="progress-bg"><div id="progress-nginx" class="progress-bar" style="width: 100%; background: var(--success);"></div></div>
             </div>
-            <div class="metric-label" style="font-size: 0.7rem;">Last checked: 2s ago</div>
+
         </div>
         <!-- Database -->
         <div class="server-card" id="card-database">
@@ -744,7 +744,7 @@
                 </div>
                 <div class="progress-bg"><div id="progress-database" class="progress-bar" style="width: 42%; background: var(--success);"></div></div>
             </div>
-            <div class="metric-label" style="font-size: 0.7rem;">Last checked: 2s ago</div>
+
         </div>
         <!-- CPU -->
         <div class="server-card" id="card-cpu">
@@ -762,7 +762,7 @@
                 </div>
                 <div class="progress-bg"><div id="progress-cpu" class="progress-bar" style="width: 23%; background: var(--success);"></div></div>
             </div>
-            <div class="metric-label" style="font-size: 0.7rem;">Last checked: 2s ago</div>
+
         </div>
         <!-- Disk -->
         <div class="server-card" id="card-disk">
@@ -780,7 +780,7 @@
                 </div>
                 <div class="progress-bg"><div id="progress-disk" class="progress-bar" style="width: 67%; background: var(--success);"></div></div>
             </div>
-            <div class="metric-label" style="font-size: 0.7rem;">Last checked: 2s ago</div>
+
         </div>
     </div>
 </section>
@@ -845,7 +845,7 @@
             <div id="confirm-msg" style="font-size: 0.85rem; margin-top: 5px; color: var(--text-main);"></div>
             <div class="confirm-btns">
                 <button class="btn btn-primary" style="background: var(--success); font-size: 0.8rem; padding: 6px 16px;" onclick="confirmStep()">✅ Confirm & Execute</button>
-                <button class="btn btn-outline" style="border-color: var(--danger); color: var(--danger); font-size: 0.8rem; padding: 6px 16px;" onclick="skipStep()">❌ Skip</button>
+                <button class="btn btn-outline" style="border-color: var(--danger); color: var(--danger); font-size: 0.8rem; padding: 6px 16px;" onclick="abortStep()">❌ Abort</button>
             </div>
         </div>
     </div>
@@ -906,9 +906,8 @@
                 <th>Time Started</th>
                 <th>Failure Type</th>
                 <th>Runbook</th>
-                <th>Steps</th>
                 <th>Status</th>
-                <th>Discord</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody id="history-body">
@@ -1028,6 +1027,12 @@
             const res = await fetch(`${API_BASE}/api/agent/feed`);
             const data = await res.json();
             
+            // If the feed was cleared on the backend for a new runbook
+            if (data.length < lastLogCount) {
+                document.getElementById('agent-feed').innerHTML = '';
+                lastLogCount = 0;
+            }
+
             if (data.length > lastLogCount) {
                 for (let i = lastLogCount; i < data.length; i++) {
                     addFeedEntry(data[i]);
@@ -1056,7 +1061,9 @@
         if (entry.needs_confirm) {
             panel.classList.add('active');
             document.getElementById('confirm-msg').innerText = `${entry.message}\nRisk: ${entry.risk || "Restarting core service"}`;
-            showToast("⚠️ Intervention Required!", "warning");
+            if (lastLogCount > 0) showToast("⚠️ Intervention Required!", "warning");
+        } else if (entry.message.includes('Human skipped') || entry.message.includes('Aborted') || entry.message.includes('Human confirmed') || entry.status.includes('RESOLVED') || entry.status.includes('ERROR') || entry.status.includes('ABORTED')) {
+            panel.classList.remove('active');
         }
     }
 
@@ -1076,10 +1083,10 @@
         showToast("✅ Confirmed. Agent continuing...", "success");
     }
 
-    async function skipStep() {
+    async function abortStep() {
         document.getElementById('confirm-panel').classList.remove('active');
-        await fetch(`${API_BASE}/api/skip`, { method: 'POST' });
-        showToast("⏭️ Step skipped.", "info");
+        await fetch(`${API_BASE}/api/abort`, { method: 'POST' });
+        showToast("🛑 Execution aborted.", "warning");
     }
 
     async function viewRunbook(name) {
@@ -1115,11 +1122,22 @@
                     <td>${new Date(row.started_at).toLocaleTimeString()}</td>
                     <td>${row.failure_type.replace('_',' ').toUpperCase()}</td>
                     <td>${row.runbook_name}</td>
-                    <td>${row.completed_steps}/${row.total_steps}</td>
-                    <td><span class="badge ${statusBadge}">${row.status}</span></td>
-                    <td><i class="fas fa-bell" style="color: var(--warning);"></i> Sent</td>
+                    <td><span class="badge ${statusBadge}">${row.status.toUpperCase()}</span></td>
+                    <td>
+                        <button onclick="deleteHistory(${row.id})" style="background: none; border: 1px solid var(--danger); color: var(--danger); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">Delete</button>
+                    </td>
                 `;
                 body.appendChild(tr);
+
+                const trSteps = document.createElement('tr');
+                trSteps.id = `steps-row-${row.id}`;
+                trSteps.style.display = 'none';
+                trSteps.innerHTML = `<td colspan="6" style="padding: 0;">
+                    <div id="steps-container-${row.id}" style="padding: 16px; background: rgba(0,0,0,0.2); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted); max-height: 200px; overflow-y: auto;">
+                        Loading...
+                    </div>
+                </td>`;
+                body.appendChild(trSteps);
             });
 
             // Update stats from another endpoint
@@ -1131,6 +1149,47 @@
             document.getElementById('stat-avg').innerText = `~${stats.avg_resolution_mins} min`;
 
         } catch (e) {}
+    }
+
+    async function toggleSteps(id) {
+        const row = document.getElementById(`steps-row-${id}`);
+        const container = document.getElementById(`steps-container-${id}`);
+        if (row.style.display === 'none') {
+            row.style.display = 'table-row';
+            try {
+                const res = await fetch(`${API_BASE}/api/history/${id}/steps`);
+                const steps = await res.json();
+                if (steps.length === 0) {
+                    container.innerHTML = "No steps found for this execution.";
+                    return;
+                }
+                let html = '<ul style="list-style: none; padding: 0;">';
+                steps.forEach(s => {
+                    const icon = s.status === 'SUCCESS' ? '✅' : (s.status === 'FAILED' ? '❌' : (s.status === 'SKIPPED' ? '⏭️' : '⏱️'));
+                    html += `<li style="margin-bottom: 8px;">
+                        <strong>Step ${s.step_number}</strong>: ${icon} ${s.description} <br>
+                        <span style="color: #64748b;">$ ${s.command}</span>
+                    </li>`;
+                });
+                html += '</ul>';
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = "Failed to load steps.";
+            }
+        } else {
+            row.style.display = 'none';
+        }
+    }
+
+    async function deleteHistory(id) {
+        if (!confirm('Are you sure you want to delete this history record?')) return;
+        try {
+            await fetch(`${API_BASE}/api/history/${id}`, { method: 'DELETE' });
+            showToast("History record deleted.", "success");
+            fetchHistory();
+        } catch (e) {
+            showToast("Failed to delete record.", "error");
+        }
     }
 
     function exportCSV() {
