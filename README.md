@@ -71,7 +71,7 @@ Then open your browser to `http://localhost:8000` to access the dashboard.
 
 ## 🚀 Live Application & Community
 
-- **Live Dashboard**: [https://runbook.onrender.com](https://runbook.onrender.com)
+- **Live Dashboard**: [https://runbook.onrender.com](https://ai-runbook-agent.onrender.com)
 - **Discord Community**: [Join our Server](https://discord.com/invite/dQEXVDS5) to receive live incident alerts and notifications.
 
 ---
