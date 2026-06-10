@@ -59,41 +59,46 @@ Click on any file to view its implementation details:
 
 ---
 
-## 🚀 Setup & Launch (Windows)
+## 🚀 Setup & Launch
 
-Follow these steps to set up and run the RUNBOOK AGENT locally:
+### Option 1 — Access Live Application
 
-### 1. Install Dependencies
-Ensure you have Python 3.11+ installed. Execute the following in PowerShell:
+👉 **[https://runbook.onrender.com](https://runbook.onrender.com)**
+
+No installation needed. Opens directly in browser.
+
+---
+
+### Option 2 — Run Locally (Windows)
+
+Follow these steps to run on your own machine:
+
+#### 1. Install Dependencies
+Ensure Python 3.11+ is installed. Run in PowerShell:
 ```powershell
 pip install -r requirements.txt
 ```
 
-### 2. Configure Local AI (Ollama)
-1. Download and install [Ollama](https://ollama.com/).
-2. Start the service.
-3. Pull the target model in your console:
-   ```powershell
-   ollama pull llama3
-   ```
-
-### 3. Setup Slack/Discord Notifications (Optional)
-If you want to receive instant alerts:
-1. Open [backend/agent_runner.py](file:///e:/run/backend/agent_runner.py#L19).
-2. Replace `DISCORD_WEBHOOK` with your channel webhook URL.
-   *(If left unchanged or empty, the app will bypass notifications and log metrics offline.)*
-
-### 4. Boot the Web Server
-Launch the FastAPI environment:
+#### 2. Configure Local AI (Ollama)
+1. Download and install [Ollama](https://ollama.com)
+2. Start the Ollama service
+3. Pull the model:
 ```powershell
-python -m uvicorn backend.main:app --reload --port 8000
+ollama pull llama3
 ```
 
-### 5. Access the Administration Dashboard
-Open your web browser and navigate to:
-👉 **[http://localhost:8000](https://runbook.onrender.com/)**
+#### 3. Setup Discord Notifications (Optional)
+To receive instant alerts:
+1. Open `backend/agent_runner.py`
+2. Set your Discord webhook URL:
+```python
+DISCORD_WEBHOOK = "https://discord.com/invite/dQEXVDS5"
+```
+If left empty, app runs without notifications.
 
----
+
+
+```
 
 ## 📖 System Architecture & Details
 
