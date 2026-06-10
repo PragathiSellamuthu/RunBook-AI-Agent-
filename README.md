@@ -5,6 +5,8 @@
 [![SQLite](https://img.shields.io/badge/SQLite-Database-blue?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org)
 [![Discord](https://img.shields.io/badge/Discord-Alerts-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com)
 
+[![Watch the Demo Explanation](https://img.shields.io/badge/Watch-Demo%20Video-red?style=for-the-badge&logo=googledrive)](https://drive.google.com/drive/folders/1BX5-v6IP2rZ9mvcntu_ihYKvY_68ao-P?usp=sharing)
+
 **RUNBOOK AGENT** is a real-time, autonomous AI operations (AIOps) agent designed to detect, diagnose, and resolve critical cloud and system infrastructure failures. It bridges the gap between high-level reasoning and physical system execution using a secure Model Context Protocol (MCP) execution design and local LLM evaluation.
 
 > [!NOTE]
