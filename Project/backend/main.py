@@ -25,7 +25,7 @@ server_status = {
 
 @app.get("/api/runbooks/{name}")
 async def get_runbook_content(name: str):
-    path = f"runbooks/{name}"
+    path = f"Project/Test cases/{name}"
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail="Runbook not found")
     with open(path, "r", encoding="utf-8") as f:
@@ -47,7 +47,7 @@ async def startup():
 
 @app.get("/")
 async def read_index():
-    return FileResponse("frontend/index.html")
+    return FileResponse("Project/frontend/index.html")
 
 @app.get("/api/status")
 async def get_status():

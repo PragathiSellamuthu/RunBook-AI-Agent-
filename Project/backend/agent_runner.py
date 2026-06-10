@@ -124,7 +124,7 @@ REASONING: one sentence why confirmation needed"""
         self.server_status['agent_busy'] = True
         
         # 1. Parse Runbook
-        runbook_path = f"runbooks/{runbook_file}"
+        runbook_path = f"Project/Test cases/{runbook_file}"
         steps = RunbookParser.parse(runbook_path)
         
         if not steps:
