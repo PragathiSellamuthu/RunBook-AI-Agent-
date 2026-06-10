@@ -95,23 +95,6 @@ Open your web browser and navigate to:
 
 ---
 
-## 🎬 5-Minute Demonstration Walkthrough
-
-Follow this script to demonstrate the RUNBOOK AGENT's features:
-
-- **Minute 1: Introduction**
-  Show the dark mode dashboard. Highlight the Infrastructure Status gauges showing **HEALTHY** metrics, and show the empty execution log feed.
-- **Minute 2: Incident Detection**
-  Click **"🔴 TRIGGER"** next to **Nginx Server Down**. Watch the Nginx status card flash red with a shake animation, its status shift to **DOWN**, and the Agent feed initiate.
-- **Minute 3: Diagnostic Gathering**
-  Watch the Agent run `systemctl status nginx` and `tail -n 20 /var/log/nginx/error.log` sequentially. The step results are added in real-time to the agent feed, and notifications are sent to Discord.
-- **Minute 4: Safety Evaluation & Intervention**
-  The agent reaches **Step 4: Restart nginx**. The Ollama LLM flags `systemctl restart nginx` as **RISKY**. The dashboard shows a yellow confirmation prompt, and Discord notifications request SRE review. Click **"✅ Confirm & Execute"** to authorize.
-- **Minute 5: Resolution & Reporting**
-  The agent completes the step, verifies service restoration, updates the status back to **HEALTHY**, and registers the execution entry in the History Table. Click **"Export CSV"** to save the log data.
-
----
-
 ## 📖 System Architecture & Details
 
 For a detailed breakdown of database structures, API routes, security considerations, and troubleshooting guidelines, please refer to the core **[DOCUMENTATION.md](file:///e:/run/DOCUMENTATION.md)**.
