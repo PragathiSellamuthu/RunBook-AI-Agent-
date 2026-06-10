@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: runbook-agent
+    env: python
+    buildCommand: "cd Project && pip install -r requirements.txt"
+    startCommand: "cd Project && python -m uvicorn runbook_agent.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DISCORD_WEBHOOK
+        value: "" # Fill this in your Render Dashboard
+      - key: GROQ_API_KEY
+        value: "" # Fill this in your Render Dashboard (optional, for LLM fallback)
