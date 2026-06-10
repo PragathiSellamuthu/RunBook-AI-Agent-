@@ -5,8 +5,6 @@
 [![SQLite](https://img.shields.io/badge/SQLite-Database-blue?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org)
 [![Discord](https://img.shields.io/badge/Discord-Alerts-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com)
 
-[![Watch the Demo Explanation](https://img.shields.io/badge/Watch-Demo%20Video-red?style=for-the-badge&logo=googledrive)](https://drive.google.com/drive/folders/1BX5-v6IP2rZ9mvcntu_ihYKvY_68ao-P?usp=sharing)
-
 **RUNBOOK AGENT** is a real-time, autonomous AI operations (AIOps) agent designed to detect, diagnose, and resolve critical cloud and system infrastructure failures. It bridges the gap between high-level reasoning and physical system execution using a secure Model Context Protocol (MCP) execution design and local LLM evaluation.
 
 > [!NOTE]
@@ -17,7 +15,7 @@
 ## ✨ Key Features
 
 - **🔄 Autonomous Execution Loop**: Parses markdown-formatted operational runbooks and executes diagnostic/remediative steps sequentially.
-- **🛡️ MCP Sandboxed Execution Layer**: Uses a custom [ShellExecutorMCPTool](file:///e:/run/backend/mcp_tool.py#L4) with a strict command allowlist to simulate terminal inputs and return realistic Linux execution output.
+- **🛡️ MCP Sandboxed Execution Layer**: Uses a secure tool with a strict command allowlist to simulate terminal inputs and return realistic Linux execution output.
 - **🧠 Local AI Step Classification**: Integrates with a local Llama3 instance running on Ollama to decide if a remediation command is `SAFE` (execute immediately) or `RISKY` (restart/terminate services).
 - **👥 Human-in-the-Loop Safeguards**: Automatically pauses execution on risky commands, alerts the SRE team, and requests confirmation in the dashboard before proceeding.
 - **📊 Real-time Operations Dashboard**: Single-page dark mode UI reporting live feed activity, status gauges, execution analytics, and incident histories.
@@ -25,69 +23,57 @@
 
 ---
 
-## 🛠️ Technology Stack
+## 📂 Project Structure
 
-- **Backend**: Python 3.11, [FastAPI](file:///e:/run/backend/main.py) (Asynchronous router), [Uvicorn](file:///e:/run/requirements.txt) (ASGI server)
-- **Database**: [SQLite](file:///e:/run/backend/database.py) (Persistent historical logs)
-- **AI Brain**: Ollama Llama3 (Local LLM endpoint)
-- **Frontend**: [index.html](file:///e:/run/frontend/index.html) (HTML5, Vanilla CSS, JS Fetch API)
-- **Alerting**: Discord Webhooks integration
+This repository is organized into the following directories:
 
----
+### [`Project/`](Project/)
+The core application workspace containing the RunBook Agent system.
+- **`runbook_agent/`**: Core backend application logic (FastAPI server, AI state machine, MCP tool).
+- **`frontend/`**: The frontend UI for the Real-time Operations Dashboard.
+- **`runbooks/`**: Markdown-based operational knowledge bases (e.g., handling Nginx failures, high CPU, etc.).
+- **`build_docs.py`**: Documentation builder script.
 
-## 📂 Project Workspace Map
-
-Click on any file to view its implementation details:
-
-- **[`backend/`](file:///e:/run/backend/)**: Core application logic.
-  - [main.py](file:///e:/run/backend/main.py) — FastAPI routing configurations & backend entry point.
-  - [agent_runner.py](file:///e:/run/backend/agent_runner.py) — Main autonomous state machine and Ollama model connector.
-  - [mcp_tool.py](file:///e:/run/backend/mcp_tool.py) — Simulated Model Context Protocol tool with command security allowlist.
-  - [runbook_parser.py](file:///e:/run/backend/runbook_parser.py) — Regex-based parser transforming markdown files to JSON step definitions.
-  - [database.py](file:///e:/run/backend/database.py) — SQLite logging client and dashboard performance metrics calculator.
-- **[`frontend/`](file:///e:/run/frontend/)**: User interfaces.
-  - [index.html](file:///e:/run/frontend/index.html) — Single-page real-time administration dashboard.
-- **[`runbooks/`](file:///e:/run/runbooks/)**: Operational knowledge-bases.
-  - [nginx_down.md](file:///e:/run/runbooks/nginx_down.md) — Remediation steps for dead web servers.
-  - [database_failure.md](file:///e:/run/runbooks/database_failure.md) — Remediation steps for database connectivity failures.
-  - [high_cpu.md](file:///e:/run/runbooks/high_cpu.md) — System monitoring and resource mitigation guidelines.
-  - [disk_full.md](file:///e:/run/runbooks/disk_full.md) — Disk capacity checks and log archival strategies.
-- **Root configurations**:
-  - [requirements.txt](file:///e:/run/requirements.txt) — Project dependencies manifest.
-  - [prompts.md](file:///e:/run/prompts.md) — AI instruction sets.
-  - [DOCUMENTATION.md](file:///e:/run/DOCUMENTATION.md) — System architecture manual and developer instructions.
+### [`DOCUMENTS/`](DOCUMENTS/)
+Contains essential documentation and reference materials for the project.
+- **`TECH_STACK.md`**: Detailed overview of the project's technology stack.
+- **`project_documentation.md`**: Comprehensive architectural manual, API routes, and developer instructions.
+- **`prompts.md`**: AI instruction sets and system prompts used by the LLM.
+- **`requirements.txt`**: Project dependencies manifest.
 
 ---
 
+## 🛠️ Quick Start
 
-## 🚀 Access the Application
-
-### Live Application
-👉 **[https://runbook.onrender.com](https://runbook.onrender.com)**
-
-Opens directly in browser. No installation needed.
-
----
-
-### 💬 Discord Community
-👉 **[https://discord.com/invite/dQEXVDS5](https://discord.com/invite/dQEXVDS5)**
-
-Join our Discord server to receive live incident 
-alerts and real-time notifications from OpsBot AI.
-
----
-
-### ⚙️ Environment Setup (Cloud)
-
-To configure your own deployment:
-
-#### 1. Set Discord Webhook (Optional)
-Set your Discord webhook URL as an 
-environment variable in Render dashboard:
-
-
+### 1. Install Dependencies
+Navigate to the `Project/` directory or use the provided `requirements.txt`:
+```bash
+pip install -r DOCUMENTS/requirements.txt
 ```
 
-## 📖 System Architecture & Details
+### 2. Run Local LLaMA3 Model
+Ensure [Ollama](https://ollama.com) is installed, then pull the model:
+```bash
+ollama pull llama3
+```
 
-For a detailed breakdown of database structures, API routes, security considerations, and troubleshooting guidelines, please refer to the core **[DOCUMENTATION.md](file:///e:/run/DOCUMENTATION.md)**.
+### 3. Start the Server
+Run the FastAPI backend using Uvicorn from the `Project/` directory:
+```bash
+cd Project
+python -m uvicorn runbook_agent.main:app --reload --port 8000
+```
+Then open your browser to `http://localhost:8000` to access the dashboard.
+
+---
+
+## 🚀 Live Application & Community
+
+- **Live Dashboard**: [https://runbook.onrender.com](https://runbook.onrender.com)
+- **Discord Community**: [Join our Server](https://discord.com/invite/dQEXVDS5) to receive live incident alerts and notifications.
+
+---
+
+## 📖 Additional Documentation
+
+For a detailed breakdown of database structures, API routes, security considerations, and troubleshooting guidelines, please refer to the **[Project Documentation](DOCUMENTS/project_documentation.md)** and **[Tech Stack](DOCUMENTS/TECH_STACK.md)**.
