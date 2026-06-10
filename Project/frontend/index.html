@@ -962,8 +962,9 @@
     // --- Core Functions ---
 
     async function fetchStatus() {
+        if (isOffline) return;
         try {
-            const res = await fetch(`${API_BASE}/api/status`);
+            const res = await fetch(`${API_BASE}/api/status?t=${new Date().getTime()}`);
             const data = await res.json();
             isOffline = false;
             document.getElementById('offline-banner').style.display = 'none';
@@ -1024,7 +1025,7 @@
     async function fetchAgentFeed() {
         if (isOffline) return;
         try {
-            const res = await fetch(`${API_BASE}/api/agent/feed`);
+            const res = await fetch(`${API_BASE}/api/agent/feed?t=${new Date().getTime()}`);
             const data = await res.json();
             
             // If the feed was cleared on the backend for a new runbook
