@@ -26,7 +26,8 @@ class ShellExecutorMCPTool:
         "uptime",
         "tar -czf /backup/logs_$(date +%F).tar.gz /var/log/nginx/*.log",
         "rm /var/log/nginx/*.log.1",
-        "ls -lh /var/log/nginx"
+        "ls -lh /var/log/nginx",
+        "echo \"Riskless execution complete\""
     ]
     
     def __init__(self, server_status_dict=None):
@@ -169,6 +170,9 @@ tmpfs           7.8G     0  7.8G   0% /dev/shm
             return """               total        used        free      shared  buff/cache   available
 Mem:           15920        4812        8122         256        2986       10612
 Swap:           2048         128        1920"""
+
+        if "echo" in command and "Riskless execution complete" in command:
+            return "Riskless execution complete"
 
         return f"Executed command: {command}\nStatus: SUCCESS\nOutput: [Simulated standard output for {command}]"
 

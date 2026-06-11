@@ -189,9 +189,15 @@ REASONING: one sentence why confirmation needed"""
         db.update_execution_steps(self.current_execution_id, len(steps))
 
         # 3. Incident Detected Notification
-        self.log_activity({"status": "FAILURE DETECTED", "message": f"{failure_type.replace('_', ' ').title()} System Critical!"})
+        if failure_type == "riskless_test":
+            self.log_activity({"status": "INFO", "message": "no risk detected"})
+            discord_title = "ℹ️ **Riskless operation detected**"
+        else:
+            self.log_activity({"status": "FAILURE DETECTED", "message": f"{failure_type.replace('_', ' ').title()} System Critical!"})
+            discord_title = "🚨 **INCIDENT DETECTED**"
+            
         self.send_discord(
-            f"🚨 **INCIDENT DETECTED**\n"
+            f"{discord_title}\n"
             f"**Type:** {failure_type.replace('_', ' ').title()}\n"
             f"**Runbook:** `{runbook_file}` activated\n"
             f"**Agent:** Starting autonomous resolution...\n"
@@ -227,9 +233,7 @@ REASONING: one sentence why confirmation needed"""
                 auto_execute = classification['auto_execute']
                 reasoning = classification['reasoning']
                 
-                if self.ai_mode_warning and not has_warned_ai:
-                    self.log_activity({"status": "WARNING", "message": f"⚠️ {self.ai_mode_warning} (defaulting to runbook configuration)"})
-                    has_warned_ai = True
+                # Warning message removed per request
                 
                 should_skip = False
                 # Confirmation block if RISKY

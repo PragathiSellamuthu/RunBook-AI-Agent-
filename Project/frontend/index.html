@@ -825,6 +825,14 @@
             </div>
             <button class="btn-trigger" onclick="triggerFailure('disk_full')">🔴 TRIGGER</button>
         </div>
+        <div class="trigger-card" id="trigger-riskless">
+            <i class="fas fa-shield-alt fa-2x" style="color: #10b981;"></i>
+            <div class="trigger-info">
+                <h4>Riskless Execution Test</h4>
+                <p>Safe operation test — automated discord notification (INFO)</p>
+            </div>
+            <button class="btn-trigger" onclick="triggerFailure('riskless_test')">🟢 TRIGGER SAFE</button>
+        </div>
     </div>
 
     <!-- Right: Agent Feed -->
@@ -877,6 +885,11 @@
             <i class="fas fa-hard-drive fa-2x mb-2" style="color: var(--warning);"></i>
             <h4>Disk Space Critical</h4>
             <p>6 steps to free up storage space</p>
+        </div>
+        <div class="runbook-card" onclick="viewRunbook('riskless_test.md')">
+            <i class="fas fa-shield-alt fa-2x mb-2" style="color: var(--success);"></i>
+            <h4>Riskless Execution</h4>
+            <p>2 steps to verify automated execution</p>
         </div>
     </div>
 </section>

@@ -71,7 +71,8 @@ def trigger_failure(failure_type: str, background_tasks: BackgroundTasks):
         "nginx_down": ("nginx_down.md", "nginx", "down"),
         "high_cpu": ("high_cpu.md", "cpu", "critical"),
         "database_failure": ("database_failure.md", "database", "down"),
-        "disk_full": ("disk_full.md", "disk", "critical")
+        "disk_full": ("disk_full.md", "disk", "critical"),
+        "riskless_test": ("riskless_test.md", "nginx", "healthy")
     }
     
     if failure_type not in mapping:
