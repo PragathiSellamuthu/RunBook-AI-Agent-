@@ -22,7 +22,6 @@
 - **👥 Human-in-the-Loop Safeguards**: Automatically pauses execution on risky commands, alerts the SRE team, and requests confirmation in the dashboard before proceeding.
 - **📊 Real-time Operations Dashboard**: Single-page dark mode UI reporting live feed activity, status gauges, execution analytics, and incident histories.
 - **🔔 Live Discord Notifications**: Instantly pushes webhook alerts for incident detection, authorization alerts, step compliance metrics, and resolutions.
-- **🛡️ Riskless Execution Testing**: Safely verify end-to-end execution flow and Discord integrations without triggering critical incident alarms.
 
 ---
 

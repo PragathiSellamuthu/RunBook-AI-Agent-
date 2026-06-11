@@ -16,13 +16,11 @@ project/
 │   ├── agent_runner.py
 │   ├── mcp_tool.py
 │   └── runbook_parser.py
-├── test_parser.py
 └── runbooks/
     ├── database_failure.md
     ├── disk_full.md
     ├── high_cpu.md
-    ├── nginx_down.md
-    └── riskless_test.md
+    └── nginx_down.md
 ```
 
 ## Source Code Files
@@ -101,12 +99,11 @@ Run these commands in order in a Windows PowerShell console:
 
 ## 🔴 Failure Scenarios
 
-You can trigger and test 5 scenarios from the dashboard control buttons:
+You can trigger and test 4 scenarios from the dashboard control buttons:
 - **Nginx Server Down**: Resolves service listening on port 80.
 - **High CPU Usage**: Locates and kills the runaway processor thread.
 - **Database Connection Failed**: Verifies ports and restarts PostgreSQL.
 - **Disk Space Critical**: Cleans up files by compressing log archives.
-- **Riskless Execution Test**: Safe operation test — automated Discord notification (INFO).
 
 ---
 
